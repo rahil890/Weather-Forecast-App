@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather/Provider/theme_provider.dart';
 import 'package:weather/Service/api_service.dart';
+import 'package:intl/intl.dart';
+import 'package:weather/view/weekly_forecast.dart';
 
 class WeatherAppHomeScreen extends ConsumerStatefulWidget {
   const WeatherAppHomeScreen({super.key});
@@ -64,6 +66,11 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
         ),
       );
     }
+  }
+
+  String formateTime(String timeString) {
+    DateTime time = DateTime.parse(timeString);
+    return DateFormat.j().format(time);
   }
 
   @override
@@ -147,7 +154,7 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "$city${country.isNotEmpty ? '$country' : ''}",
+                    "$city${country.isNotEmpty ? ', $country' : ''}",
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
@@ -260,7 +267,7 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
                                 height: 30,
                               ),
                               Text(
-                                "${hourly.isNotEmpty ? hourly.map((h)=> h['temp_c']).reduce((a,b)=> a>b?a:b):"N/A"}",
+                                "${hourly.isNotEmpty ? hourly.map((h) => h['temp_c']).reduce((a, b) => a > b ? a : b) : "N/A"}",
                                 style: TextStyle(
                                   color: Theme.of(
                                     context,
@@ -282,27 +289,26 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15),
                   Container(
-                    height: 250, 
-                    width: double.maxFinite, 
+                    height: 250,
+                    width: double.maxFinite,
                     decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          color: Theme.of(context).colorScheme.secondary
-                        )
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(40), 
-                      )
+                        top: Radius.circular(40),
+                      ),
                     ),
-                    child: Column(children: [
-                      SizedBox(
-                        height: 10,
-                      ), 
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 20, 
+                            horizontal: 20,
                             vertical: 10,
                           ),
                           child: Row(
@@ -313,20 +319,105 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: 
-                                    Theme.of(context).colorScheme.secondary,
-                                )
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
+                                ),
                               ),
-
-
-                            //START FROM HERE
-                            
-
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WeeklyForecast(
+                                        city: city,
+                                        currentValue: currentValue,
+                                        pastWeek: pastWeek,
+                                        next7days: next7days,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Weekly Forecast",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                    ],),
-                  )
+                        Divider(color: Theme.of(context).colorScheme.secondary),
+                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 165,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: hourly.length,
+                            itemBuilder: (context, index) {
+                              final hour = hourly[index];
+                              final now = DateTime.now();
+                              final hourTime = DateTime.parse(hour['time']);
+                              final isCurrentHour =
+                                  now.hour == hourTime.hour &&
+                                  now.day == hourTime.day;
+                              return Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Container(
+                                  height: 70,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: isCurrentHour
+                                        ? Colors.orangeAccent
+                                        : Colors.black38,
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        isCurrentHour
+                                            ? "Now"
+                                            : formateTime(hour['time']),
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Image.network(
+                                        "https:${hour['condition']?['icon']}",
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        "${hour['temp_c']}°C",
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.secondary,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
           ],
