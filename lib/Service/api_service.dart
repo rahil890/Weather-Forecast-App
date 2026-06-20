@@ -25,6 +25,30 @@ class WeatherApiService {
     return data;
   }
 
+  // by coordinates
+  Future<Map<String, dynamic>> getHourlyForeCastByCoordinates(
+    double latitude,
+    double longitude,
+    ) async {
+      final url = Uri.parse(
+        "$_baseUrl/forecast.json?key=$apiKey&q=$latitude,$longitude&days=7",
+        );
+
+      final res = await http.get(url);
+
+      if (res.statusCode != 200) {
+        throw Exception("Failed to fetch data: ${res.body}");
+      }
+
+      final data = json.decode(res.body);
+
+      if (data.containsKey('error')) {
+        throw Exception(data['error']['message'] ?? 'Location error');
+      }
+
+      return data;
+  }
+
   //fore previous 7 day forecast
   Future<List<Map<String, dynamic>>> getPastSevenDaysWeather(
     String location,
