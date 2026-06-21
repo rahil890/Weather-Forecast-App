@@ -1,16 +1,49 @@
-# weather
+# 🌦️ Weather Forecast App
 
-A new Flutter project.
+A modern Weather Forecast App built with Flutter that provides real-time weather information based on the user's current location. 
+Users can also search for any city worldwide to view detailed weather forecasts and historical weather data.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+* 📍 **Location-Based Weather**
 
-A few resources to get you started if this is your first Flutter project:
+  * Automatically detects your current location and displays the latest weather information.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* 🔍 **Search Any City**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  * Search for any city around the world and view its weather details instantly.
+
+* 📅 **7-Day Weather Forecast**
+
+  * Get detailed weather forecasts for the next 7 days.
+
+* 📊 **7-Day Historical Weather**
+
+  * View weather information from the previous 7 days.
+
+* 🌡️ **Detailed Weather Information**
+
+  * Temperature
+  * Humidity
+  * Wind Speed
+  * Visibility
+
+* 🎨 **Clean and Responsive UI**
+
+  * Built with Flutter for a smooth and beautiful user experience across Android and iOS devices.
+
+## 🛠️ Built With
+
+* Flutter
+* Dart
+* FreeWeather API
+* Geolocator
+* HTTP Package
+
+## 🔒 Permissions
+
+This application requires location permission to provide weather information based on the user's current location.
+
+## 👨‍💻 Author
+
+Developed with Flutter by **Rahil Kardam**.

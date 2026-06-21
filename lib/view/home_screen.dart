@@ -163,7 +163,7 @@ class _WeatherAppHomeScreenState extends ConsumerState<WeatherAppHomeScreen> {
         actions: [
           SizedBox(width: 25),
           SizedBox(
-            width: 285,
+            width: 275,
             height: 50,
             child: TextField(
               style: TextStyle(
